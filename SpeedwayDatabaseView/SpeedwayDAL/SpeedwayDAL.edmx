@@ -194,7 +194,7 @@
           <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Teams_Id" Type="Int32" />
+          <Property Name="TeamsId" Type="Int32" />
           <NavigationProperty Name="Scores" Relationship="Self.FK_RiderScore" FromRole="Riders" ToRole="Scores" />
           <NavigationProperty Name="Team" Relationship="Self.FK_RiderTeam" FromRole="Riders" ToRole="Teams" />
         </EntityType>
@@ -204,8 +204,8 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Points" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Rider_Id" Type="Int32" Nullable="false" />
-          <Property Name="Match_Id" Type="Int32" Nullable="false" />
+          <Property Name="RiderId" Type="Int32" Nullable="false" />
+          <Property Name="MatchId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Match" Relationship="Self.FK_MatchScore" FromRole="Scores" ToRole="Matches" />
           <NavigationProperty Name="Rider" Relationship="Self.FK_RiderScore" FromRole="Scores" ToRole="Riders" />
         </EntityType>
@@ -217,7 +217,7 @@
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="StadiumCapacity" Type="Int32" Nullable="false" />
-          <Property Name="League_Id" Type="Int32" Nullable="false" />
+          <Property Name="LeagueId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="League" Relationship="Self.FK_LeagueTeam" FromRole="Teams" ToRole="Leagues" />
           <NavigationProperty Name="Riders" Relationship="Self.FK_RiderTeam" FromRole="Teams" ToRole="Riders" />
           <NavigationProperty Name="Matches" Relationship="Self.MatchTeam" FromRole="Teams" ToRole="Matches" />
@@ -230,7 +230,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Teams">
-              <PropertyRef Name="League_Id" />
+              <PropertyRef Name="LeagueId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -242,7 +242,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Scores">
-              <PropertyRef Name="Match_Id" />
+              <PropertyRef Name="MatchId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -254,7 +254,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Scores">
-              <PropertyRef Name="Rider_Id" />
+              <PropertyRef Name="RiderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -266,7 +266,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Riders">
-              <PropertyRef Name="Teams_Id" />
+              <PropertyRef Name="TeamsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -332,7 +332,7 @@
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="Teams_Id" ColumnName="Teams_Id" />
+                <ScalarProperty Name="TeamsId" ColumnName="Teams_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -341,8 +341,8 @@
               <MappingFragment StoreEntitySet="Scores">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Points" ColumnName="Points" />
-                <ScalarProperty Name="Rider_Id" ColumnName="Rider_Id" />
-                <ScalarProperty Name="Match_Id" ColumnName="Match_Id" />
+                <ScalarProperty Name="RiderId" ColumnName="Rider_Id" />
+                <ScalarProperty Name="MatchId" ColumnName="Match_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -353,7 +353,7 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="City" ColumnName="City" />
                 <ScalarProperty Name="StadiumCapacity" ColumnName="StadiumCapacity" />
-                <ScalarProperty Name="League_Id" ColumnName="League_Id" />
+                <ScalarProperty Name="LeagueId" ColumnName="League_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -16,8 +16,8 @@ namespace SpeedwayDAL
     {
         public int Id { get; set; }
         public string Points { get; set; }
-        public int Rider_Id { get; set; }
-        public int Match_Id { get; set; }
+        public int RiderId { get; set; }
+        public int MatchId { get; set; }
     
         public virtual Match Match { get; set; }
         public virtual Rider Rider { get; set; }
