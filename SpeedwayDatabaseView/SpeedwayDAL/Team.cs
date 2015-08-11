@@ -25,7 +25,7 @@ namespace SpeedwayDAL
         public string Name { get; set; }
         public string City { get; set; }
         public int StadiumCapacity { get; set; }
-        public int League_Id { get; set; }
+        public int LeagueId { get; set; }
     
         public virtual League League { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

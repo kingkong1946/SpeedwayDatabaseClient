@@ -25,7 +25,7 @@ namespace SpeedwayDAL
         public string LastName { get; set; }
         public System.DateTime BirthDate { get; set; }
         public string Country { get; set; }
-        public Nullable<int> Teams_Id { get; set; }
+        public Nullable<int> TeamsId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Score> Scores { get; set; }
