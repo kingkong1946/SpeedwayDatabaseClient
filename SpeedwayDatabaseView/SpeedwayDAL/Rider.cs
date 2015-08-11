@@ -23,7 +23,7 @@ namespace SpeedwayDAL
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public System.DateTimeOffset BirthDate { get; set; }
+        public System.DateTime BirthDate { get; set; }
         public string Country { get; set; }
         public Nullable<int> Teams_Id { get; set; }
     
