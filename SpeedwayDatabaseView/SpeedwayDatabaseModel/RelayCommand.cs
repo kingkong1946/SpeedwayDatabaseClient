@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace SpeedwayDatabaseModel
 {
-    public class RidersModel : ICommand
+    public class RelayCommand : ICommand
     {
         #region Fields
         private readonly Predicate<object> _canExecute;
@@ -15,14 +15,14 @@ namespace SpeedwayDatabaseModel
         #endregion
 
         #region Constructors
-        public RidersModel(Action<object> execute, Predicate<object> canExecute)
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if (execute == null) throw new ArgumentNullException("execute is NULL");
             _canExecute = canExecute;
             _execute = execute;
         }
 
-        public RidersModel(Action<object> execute) : this(execute, null)
+        public RelayCommand(Action<object> execute) : this(execute, null)
         {
         }
         #endregion

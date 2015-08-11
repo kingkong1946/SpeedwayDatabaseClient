@@ -24,8 +24,8 @@ namespace SpeedwayDatabaseViewModel
 
         public RidersViewModel()
         {
-            LoadTable = new RidersModel(o => Load());
-            CellEdit = new RidersModel(o => Edit(o));
+            LoadTable = new RelayCommand(o => Load());
+            CellEdit = new RelayCommand(o => Edit(o));
         }
 
         #endregion
