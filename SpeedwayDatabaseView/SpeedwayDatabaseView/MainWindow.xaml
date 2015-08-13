@@ -11,47 +11,52 @@
     <Window.DataContext>
         <viewModel:RidersViewModel/>
     </Window.DataContext>
-    <Window.InputBindings>
-        <KeyBinding Key="{Binding KeyPressedCommand.GetKey}" Command="{Binding KeyPressedCommand}"/>
-    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <TabControl Grid.Row="0" Grid.ColumnSpan="2">
+        <TabControl Grid.Row="0" Grid.ColumnSpan="{Binding MergeAll}">
             <TabItem Header="Riders">
                 <DataGrid 
                     x:Name="RiderDataGrid" 
-                    ItemsSource="{Binding Riders}"
+                    ItemsSource="{Binding Path=Riders, Mode=TwoWay}"
                     SelectedItem="{Binding SelectedRider}"
                     CanUserAddRows="False"
                     CanUserReorderColumns="False"
                     CanUserResizeColumns="False"
-                    CanUserResizeRows="False">
+                    CanUserResizeRows="False"
+                    IsReadOnly="False">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Loaded">
                             <i:InvokeCommandAction Command="{Binding LoadTableCommand}"/>
                         </i:EventTrigger>
 
-                        <i:EventTrigger EventName="AddingNewItem">
-                            <i:InvokeCommandAction Command="{Binding AddItem}"/>
+                        <i:EventTrigger EventName="CellEditEnding">
+                            <i:InvokeCommandAction Command="{Binding UploadCommand}"/>
                         </i:EventTrigger>
-                        
-                        <i:EventTrigger EventName="KeyDown">
-                            <i:InvokeCommandAction Command="{Binding KeyPressedCommand}"></i:InvokeCommandAction>
-                        </i:EventTrigger>
+
                     </i:Interaction.Triggers>
+                    <DataGrid.InputBindings>
+                        <KeyBinding Key="Delete" Command="{Binding DeleteRowCommand}"/>
+                    </DataGrid.InputBindings>
                 </DataGrid>
             </TabItem>
         </TabControl>
+        
         <Button Grid.Row="1" Grid.Column="0" x:Name="AddRowButton" Content="Add Row" Command="{Binding AddRowCommand}"/>
         <Button Grid.Row="1" Grid.Column="1" x:Name="DeleteRowButton" Content="Delete Selected Row" Command="{Binding DeleteRowCommand}"/>
+        
+        <ToolBar Grid.Row="2" Grid.ColumnSpan="{Binding MergeAll}">
+            <Label Content="{Binding ErrorMessage}"></Label>
+        </ToolBar>
     </Grid>
 </Window>

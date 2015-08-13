@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Practices.ServiceLocation;
 using SpeedwayDatabaseModel;
 using SpeedwayDatabaseViewModel.Annotations;
 using SpeedwayDAL;
@@ -29,12 +30,18 @@ namespace SpeedwayDatabaseViewModel
             LoadTableCommand = new RelayCommand(o => Load());
             AddRowCommand = new RelayCommand(o => AddRowInRiders());
             DeleteRowCommand = new RelayCommand(o => DeleteRowFromRiders(), CanDelete);
+            UploadCommand = new RelayCommand(o => UploadAsync());
         }
 
         #endregion
 
         #region Fields
 
+        private const int _MergeAll = 3;
+
+        public int MergeAll => _MergeAll;
+
+        public string ErrorMessage { get; set; } = "OK";
         public Rider SelectedRider { get; set; }
         private ObservableCollection<Rider> _riders;
         public ObservableCollection<Rider> Riders
@@ -44,6 +51,7 @@ namespace SpeedwayDatabaseViewModel
             {
                 _riders = value;
                 OnPropertyChanged("Riders");
+                UploadAsync();
             }
         }
 
@@ -54,7 +62,8 @@ namespace SpeedwayDatabaseViewModel
         public ICommand LoadTableCommand { get; set; }
         public ICommand AddRowCommand { get; set; }
         public ICommand DeleteRowCommand { get; set; }
-        public ICommand KeyPressedCommand { get; set; }
+        public ICommand UploadCommand { get; set; }
+        //public ICommand EditRowCommand { get; set; }
 
         #endregion
 
@@ -78,22 +87,49 @@ namespace SpeedwayDatabaseViewModel
             }
         }
 
-        private void Edit(object parameter)
+        private async void UploadAsync()
         {
-
             using (var entity = new SpeedwayEntities())
             {
-
+                try
+                {
+                    await entity.SaveChangesAsync();
+                }
+                catch (Exception exception)
+                {
+                    ErrorMessage = exception.Message;
+                }
             }
         }
 
         private void AddRowInRiders()
         {
-            Riders.Add(new Rider());
+            var rider = new Rider()
+            {
+                BirthDate = DateTime.Now,
+                Country = "Unknown",
+                FirstName = "Unknown",
+                LastName = "Unknown"
+            };
+
+            Riders.Add(rider);
+            using (var context = new SpeedwayEntities())
+            {
+                var riders = context.Riders;
+                riders.Add(rider);
+                context.SaveChanges();
+            }
         }
 
         private void DeleteRowFromRiders()
         {
+            using (var context = new SpeedwayEntities())
+            {
+                var riders = context.Riders;
+                riders.Attach(SelectedRider);
+                riders.Remove(SelectedRider);
+                context.SaveChanges();
+            }
             Riders.Remove(SelectedRider);
         }
 
@@ -110,6 +146,5 @@ namespace SpeedwayDatabaseViewModel
         }
 
         #endregion
-
     }
 }
