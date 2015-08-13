@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -24,16 +26,18 @@ namespace SpeedwayDatabaseViewModel
 
         public RidersViewModel()
         {
-            LoadTable = new RelayCommand(o => Load());
-            CellEdit = new RelayCommand(o => Edit(o));
+            LoadTableCommand = new RelayCommand(o => Load());
+            AddRowCommand = new RelayCommand(o => AddRowInRiders());
+            DeleteRowCommand = new RelayCommand(o => DeleteRowFromRiders(), CanDelete);
         }
 
         #endregion
 
         #region Fields
 
-        private List<Rider> _riders = new List<Rider>();
-        public List<Rider> Riders
+        public Rider SelectedRider { get; set; }
+        private ObservableCollection<Rider> _riders;
+        public ObservableCollection<Rider> Riders
         {
             get { return _riders; }
             set
@@ -47,27 +51,55 @@ namespace SpeedwayDatabaseViewModel
 
         #region Commands
 
-        public ICommand LoadTable { get; set; }
-        public ICommand CellEdit { get; set; }
+        public ICommand LoadTableCommand { get; set; }
+        public ICommand AddRowCommand { get; set; }
+        public ICommand DeleteRowCommand { get; set; }
+        public ICommand KeyPressedCommand { get; set; }
 
         #endregion
-        
+
+        #region Private Methods
+
+        private bool CanDelete(object parameter)
+        {
+            return SelectedRider != null;
+        }
+
         private void Load()
         {
+            Riders = new ObservableCollection<Rider>();
             using (var entity = new SpeedwayEntities())
             {
                 var riders = entity.Riders;
-                Riders = riders.ToList();
+                foreach (var rider in riders)
+                {
+                    Riders.Add(rider);
+                }
             }
         }
 
         private void Edit(object parameter)
         {
+
             using (var entity = new SpeedwayEntities())
             {
 
             }
         }
+
+        private void AddRowInRiders()
+        {
+            Riders.Add(new Rider());
+        }
+
+        private void DeleteRowFromRiders()
+        {
+            Riders.Remove(SelectedRider);
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -76,5 +108,8 @@ namespace SpeedwayDatabaseViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
+
     }
 }
