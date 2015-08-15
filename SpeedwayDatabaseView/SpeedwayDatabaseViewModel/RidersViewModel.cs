@@ -18,31 +18,58 @@ using SpeedwayDAL;
 namespace SpeedwayDatabaseViewModel
 {
     /// <summary>
-    /// PL: Odpowiada za komunikacje z tabelą Riders
-    /// EN: Is responsible for communication with Riders
+    /// Is responsible for communication with Riders
     /// </summary>
     public class RidersViewModel : INotifyPropertyChanged
     {
         #region Constructors
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public RidersViewModel()
         {
             LoadTableCommand = new RelayCommand(o => Load());
             AddRowCommand = new RelayCommand(o => AddRowInRiders());
-            DeleteRowCommand = new RelayCommand(o => DeleteRowFromRiders(), CanDelete);
-            UploadCommand = new RelayCommand(o => UploadAsync());
+            DeleteRowCommand = new RelayCommand(o => DeleteRowFromRiders(), IsSelected);
         }
 
         #endregion
 
         #region Fields
 
+        /// <summary>
+        /// Number of merge columns for ToolBar and DataGrid
+        /// </summary>
         private const int _MergeAll = 3;
-
         public int MergeAll => _MergeAll;
 
+        /// <summary>
+        /// Message error
+        /// </summary>
         public string ErrorMessage { get; set; } = "OK";
-        public Rider SelectedRider { get; set; }
+
+        /// <summary>
+        /// Rider selected from table
+        /// </summary>
+        private Rider _selectedRider;
+        public Rider SelectedRider
+        {
+            get
+            {
+                return _selectedRider;
+            }
+            set
+            {
+                RowEdited();
+                _selectedRider = value;
+                OnPropertyChanged("SelectedRider");
+            }
+        }
+
+        /// <summary>
+        /// Riders Collection 
+        /// </summary>
         private ObservableCollection<Rider> _riders;
         public ObservableCollection<Rider> Riders
         {
@@ -51,7 +78,6 @@ namespace SpeedwayDatabaseViewModel
             {
                 _riders = value;
                 OnPropertyChanged("Riders");
-                UploadAsync();
             }
         }
 
@@ -59,17 +85,50 @@ namespace SpeedwayDatabaseViewModel
 
         #region Commands
 
+        /// <summary>
+        /// Occurs when Rider grid is loading
+        /// </summary>
         public ICommand LoadTableCommand { get; set; }
+
+        /// <summary>
+        /// Occurs when user added row
+        /// </summary>
         public ICommand AddRowCommand { get; set; }
+
+        /// <summary>
+        /// Occurs when user deleted row
+        /// </summary>
         public ICommand DeleteRowCommand { get; set; }
-        public ICommand UploadCommand { get; set; }
-        //public ICommand EditRowCommand { get; set; }
+
+        /// <summary>
+        /// Occurs when user edites row
+        /// </summary>
+        public ICommand RowEditedCommand { get; set; }
 
         #endregion
 
         #region Private Methods
+        
+        private void RowEdited()
+        {
+            try
+            {
+                using (var context = new SpeedwayEntities())
+                {
+                    var riders = context.Riders;
+                    riders.Attach(SelectedRider);
+                    var entry = context.Entry(SelectedRider);
+                    entry.State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = e.Message;
+            }
+        }
 
-        private bool CanDelete(object parameter)
+        private bool IsSelected(object parameter)
         {
             return SelectedRider != null;
         }
@@ -77,28 +136,20 @@ namespace SpeedwayDatabaseViewModel
         private void Load()
         {
             Riders = new ObservableCollection<Rider>();
-            using (var entity = new SpeedwayEntities())
+            try
             {
-                var riders = entity.Riders;
-                foreach (var rider in riders)
+                using (var entity = new SpeedwayEntities())
                 {
-                    Riders.Add(rider);
+                    var riders = entity.Riders;
+                    foreach (var rider in riders)
+                    {
+                        Riders.Add(rider);
+                    }
                 }
             }
-        }
-
-        private async void UploadAsync()
-        {
-            using (var entity = new SpeedwayEntities())
+            catch (Exception e)
             {
-                try
-                {
-                    await entity.SaveChangesAsync();
-                }
-                catch (Exception exception)
-                {
-                    ErrorMessage = exception.Message;
-                }
+                ErrorMessage = e.Message;
             }
         }
 
@@ -106,29 +157,43 @@ namespace SpeedwayDatabaseViewModel
         {
             var rider = new Rider()
             {
-                BirthDate = DateTime.Now,
+                BirthDate = DateTime.MinValue,
                 Country = "Unknown",
                 FirstName = "Unknown",
-                LastName = "Unknown"
+                LastName = "Unknown",
             };
 
             Riders.Add(rider);
-            using (var context = new SpeedwayEntities())
+            try
             {
-                var riders = context.Riders;
-                riders.Add(rider);
-                context.SaveChanges();
+                using (var context = new SpeedwayEntities())
+                {
+                    var riders = context.Riders;
+                    riders.Add(rider);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = e.Message;
             }
         }
 
         private void DeleteRowFromRiders()
         {
-            using (var context = new SpeedwayEntities())
+            try
             {
-                var riders = context.Riders;
-                riders.Attach(SelectedRider);
-                riders.Remove(SelectedRider);
-                context.SaveChanges();
+                using (var context = new SpeedwayEntities())
+                {
+                    var riders = context.Riders;
+                    riders.Attach(SelectedRider);
+                    riders.Remove(SelectedRider);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = e.Message;
             }
             Riders.Remove(SelectedRider);
         }

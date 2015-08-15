@@ -15,7 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         
         <Grid.ColumnDefinitions>
@@ -28,8 +28,9 @@
             <TabItem Header="Riders">
                 <DataGrid 
                     x:Name="RiderDataGrid" 
-                    ItemsSource="{Binding Path=Riders, Mode=TwoWay}"
-                    SelectedItem="{Binding SelectedRider}"
+                    ItemsSource="{Binding Riders}"
+                    SelectedItem="{Binding Path=SelectedRider, Mode=TwoWay}"
+                    IsSynchronizedWithCurrentItem="True"
                     CanUserAddRows="False"
                     CanUserReorderColumns="False"
                     CanUserResizeColumns="False"
@@ -39,24 +40,20 @@
                         <i:EventTrigger EventName="Loaded">
                             <i:InvokeCommandAction Command="{Binding LoadTableCommand}"/>
                         </i:EventTrigger>
-
-                        <i:EventTrigger EventName="CellEditEnding">
-                            <i:InvokeCommandAction Command="{Binding UploadCommand}"/>
-                        </i:EventTrigger>
-
                     </i:Interaction.Triggers>
+                    
                     <DataGrid.InputBindings>
                         <KeyBinding Key="Delete" Command="{Binding DeleteRowCommand}"/>
                     </DataGrid.InputBindings>
                 </DataGrid>
             </TabItem>
         </TabControl>
-        
+
         <Button Grid.Row="1" Grid.Column="0" x:Name="AddRowButton" Content="Add Row" Command="{Binding AddRowCommand}"/>
         <Button Grid.Row="1" Grid.Column="1" x:Name="DeleteRowButton" Content="Delete Selected Row" Command="{Binding DeleteRowCommand}"/>
-        
+
         <ToolBar Grid.Row="2" Grid.ColumnSpan="{Binding MergeAll}">
-            <Label Content="{Binding ErrorMessage}"></Label>
+            <Label Content="{Binding ErrorMessage}"/>
         </ToolBar>
     </Grid>
 </Window>
