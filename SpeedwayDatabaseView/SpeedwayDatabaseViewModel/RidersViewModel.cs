@@ -18,7 +18,7 @@ namespace SpeedwayDatabaseViewModel
     /// PL: Odpowiada za komunikacje z tabelą Riders
     /// EN: Is responsible for communication with Riders
     /// </summary>
-    public class RidersViewModel : BaseViewModel
+    public class RidersViewModel : INotifyPropertyChanged
     {
         #region Constructors
 
@@ -69,7 +69,6 @@ namespace SpeedwayDatabaseViewModel
             }
         }
 
-<<<<<<< HEAD
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -77,28 +76,5 @@ namespace SpeedwayDatabaseViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-=======
-        private void DeleteRowFromRiders()
-        {
-            try
-            {
-                using (var context = new SpeedwayEntities())
-                {
-                    var riders = context.Riders;
-                    riders.Attach(SelectedRider);
-                    riders.Remove(SelectedRider);
-                    context.SaveChanges();
-                }
-            }
-            catch (Exception e)
-            {
-                ErrorMessage = e.Message;
-            }
-            Riders.Remove(SelectedRider);
-        }
-
-        #endregion
-
->>>>>>> 7339f55... Separate INotifyPropertyChanged implementatnion to BaseMainView class.
     }
 }
