@@ -20,7 +20,7 @@ namespace SpeedwayDatabaseViewModel
     /// <summary>
     /// Is responsible for communication with Riders
     /// </summary>
-    public class RidersViewModel : INotifyPropertyChanged
+    public class RidersViewModel : BaseViewModel
     {
         #region Constructors
 
@@ -206,16 +206,5 @@ namespace SpeedwayDatabaseViewModel
 
         #endregion
 
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }
