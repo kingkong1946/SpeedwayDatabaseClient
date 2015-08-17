@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RidersViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
