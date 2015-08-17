@@ -52,6 +52,11 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RidersViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="SearchViewModel.cs" />
+    <Compile Include="BaseViewModel.cs" />
+>>>>>>> 7339f55... Separate INotifyPropertyChanged implementatnion to BaseMainView class.
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpeedwayDAL\SpeedwayDAL.csproj">
