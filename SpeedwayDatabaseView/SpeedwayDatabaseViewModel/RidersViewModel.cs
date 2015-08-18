@@ -205,6 +205,5 @@ namespace SpeedwayDatabaseViewModel
         }
 
         #endregion
-
     }
 }

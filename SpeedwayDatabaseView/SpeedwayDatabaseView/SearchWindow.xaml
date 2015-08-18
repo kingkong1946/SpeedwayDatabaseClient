@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedwayDatabaseView"
+        xmlns:viewModel="clr-namespace:SpeedwayDatabaseViewModel;assembly=SpeedwayDatabaseViewModel"
         mc:Ignorable="d"
         Title="SearchWindow" Height="200" Width="300" ResizeMode="NoResize">
     <Window.DataContext>
-        
+        <viewModel:SearchViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,22 +27,22 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Content="ID:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" MaxLines="1"/>
+        <TextBox Grid.Row="0" Grid.Column="1" MaxLines="1" Text="{Binding Id}"/>
 
         <Label Grid.Row="1" Grid.Column="0" Content="First name:"/>
-        <TextBox Grid.Row="1" Grid.Column="1" MaxLines="1"/>
+        <TextBox Grid.Row="1" Grid.Column="1" MaxLines="1" Text="{Binding FirstName}"/>
 
         <Label Grid.Row="2" Grid.Column="0" Content="Last name:"/>
-        <TextBox Grid.Row="2" Grid.Column="1" MaxLines="1"/>
+        <TextBox Grid.Row="2" Grid.Column="1" MaxLines="1" Text="{Binding LastName}"/>
 
         <Label Grid.Row="3" Grid.Column="0" Content="Birth Date:"/>
-        <TextBox Grid.Row="3" Grid.Column="1" MaxLines="1"/>
+        <TextBox Grid.Row="3" Grid.Column="1" MaxLines="1" Text="{Binding BirthDate}"/>
 
         <Label Grid.Row="4" Grid.Column="0" Content="Country:"/>
-        <TextBox Grid.Row="4" Grid.Column="1" MaxLines="1"/>
+        <TextBox Grid.Row="4" Grid.Column="1" MaxLines="1" Text="{Binding Country}"/>
 
         <Label Grid.Row="5" Grid.Column="0" Content="Team ID:"/>
-        <TextBox Grid.Row="5" Grid.Column="1" MaxLines="1"/>
+        <TextBox Grid.Row="5" Grid.Column="1" MaxLines="1" Text="{Binding TeamId}"/>
         
         <Button Grid.Row="6" Grid.Column="1" Content="Search" Command="{Binding ClickedCommand}" CommandParameter="{Binding SearchViewModel}"/>
     </Grid>
