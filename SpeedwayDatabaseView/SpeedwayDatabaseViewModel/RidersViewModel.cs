@@ -197,6 +197,7 @@ namespace SpeedwayDatabaseViewModel
             }
             Riders.Remove(SelectedRider);
         }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 
