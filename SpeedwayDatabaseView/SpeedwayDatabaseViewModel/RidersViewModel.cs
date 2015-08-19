@@ -32,6 +32,7 @@ namespace SpeedwayDatabaseViewModel
             LoadTableCommand = new RelayCommand(o => Load());
             AddRowCommand = new RelayCommand(o => AddRowInRiders());
             DeleteRowCommand = new RelayCommand(o => DeleteRowFromRiders(), IsSelected);
+            SearchCommand = new RelayCommand(o => Search());
         }
 
         #endregion
@@ -88,27 +89,32 @@ namespace SpeedwayDatabaseViewModel
         /// <summary>
         /// Occurs when Rider grid is loading
         /// </summary>
-        public ICommand LoadTableCommand { get; set; }
+        public ICommand LoadTableCommand { get; }
 
         /// <summary>
         /// Occurs when user added row
         /// </summary>
-        public ICommand AddRowCommand { get; set; }
+        public ICommand AddRowCommand { get; }
 
         /// <summary>
         /// Occurs when user deleted row
         /// </summary>
-        public ICommand DeleteRowCommand { get; set; }
+        public ICommand DeleteRowCommand { get; }
 
         /// <summary>
-        /// Occurs when user edites row
+        /// Occurs when user click searh button
         /// </summary>
-        public ICommand RowEditedCommand { get; set; }
 
+        public ICommand SearchCommand { get; }
         #endregion
-        
+
         #region Private Methods
         
+        private void Search()
+        {
+            
+        }
+
         private void RowEdited()
         {
             try
@@ -138,9 +144,9 @@ namespace SpeedwayDatabaseViewModel
             Riders = new ObservableCollection<Rider>();
             try
             {
-            using (var entity = new SpeedwayEntities())
-            {
-                var riders = entity.Riders;
+                using (var entity = new SpeedwayEntities())
+                {
+                    var riders = entity.Riders;
                     foreach (var rider in riders)
                     {
                         Riders.Add(rider);
@@ -165,9 +171,9 @@ namespace SpeedwayDatabaseViewModel
 
             Riders.Add(rider);
             try
-        {
-                using (var context = new SpeedwayEntities())
             {
+                using (var context = new SpeedwayEntities())
+                {
                     var riders = context.Riders;
                     riders.Add(rider);
                     context.SaveChanges();
@@ -199,6 +205,8 @@ namespace SpeedwayDatabaseViewModel
         }
         #endregion
 
+        #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -206,5 +214,7 @@ namespace SpeedwayDatabaseViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }
