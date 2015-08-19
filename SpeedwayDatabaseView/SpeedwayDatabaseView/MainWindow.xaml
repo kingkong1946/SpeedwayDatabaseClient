@@ -8,9 +8,6 @@
         xmlns:viewModel="clr-namespace:SpeedwayDatabaseViewModel;assembly=SpeedwayDatabaseViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="500">
-    <Window.DataContext>
-        <viewModel:RidersViewModel/>
-    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -26,6 +23,9 @@
 
         <TabControl Grid.Row="0" Grid.ColumnSpan="{Binding MergeAll}">
             <TabItem Header="Riders">
+                <TabItem.DataContext>
+                    <viewModel:RidersViewModel/>
+                </TabItem.DataContext>
                 <DataGrid 
                     x:Name="RiderDataGrid" 
                     ItemsSource="{Binding Riders}"
@@ -35,7 +35,12 @@
                     CanUserReorderColumns="False"
                     CanUserResizeColumns="False"
                     CanUserResizeRows="False"
-                    IsReadOnly="False">
+                    IsReadOnly="False"
+                    AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" ></DataGridTextColumn>
+                    </DataGrid.Columns>
+                    
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Loaded">
                             <i:InvokeCommandAction Command="{Binding LoadTableCommand}"/>
@@ -51,7 +56,7 @@
 
         <Button Grid.Row="1" Grid.Column="0" Content="Add Row" Command="{Binding AddRowCommand}"/>
         <Button Grid.Row="1" Grid.Column="1" Content="Delete Selected Row" Command="{Binding DeleteRowCommand}"/>
-        <Button Grid.Row="1" Grid.Column="2" Content="Search" Command="{Binding SearchCommand}"/>
+        <Button Grid.Row="1" Grid.Column="2" Content="Search" Click="SearchRecords"/>
 
         <ToolBar Grid.Row="2" Grid.ColumnSpan="{Binding MergeAll}">
             <Label Content="{Binding ErrorMessage}"/>

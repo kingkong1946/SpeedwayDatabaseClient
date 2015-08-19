@@ -10,6 +10,7 @@
     <Window.DataContext>
         <viewModel:SearchViewModel/>
     </Window.DataContext>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

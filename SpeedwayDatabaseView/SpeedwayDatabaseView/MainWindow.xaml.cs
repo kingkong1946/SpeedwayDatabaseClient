@@ -24,5 +24,11 @@ namespace SpeedwayDatabaseView
         {
             InitializeComponent();
         }
+
+        private void SearchRecords(object sender, RoutedEventArgs e)
+        {
+            var searchWindow = new SearchWindow();
+            searchWindow.ShowDialog();
+        }
     }
 }
