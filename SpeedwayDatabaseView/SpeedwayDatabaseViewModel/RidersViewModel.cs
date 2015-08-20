@@ -40,12 +40,6 @@ namespace SpeedwayDatabaseViewModel
         #region Fields
 
         /// <summary>
-        /// Number of merge columns for ToolBar and DataGrid
-        /// </summary>
-        private const int _MergeAll = 3;
-        public int MergeAll => _MergeAll;
-
-        /// <summary>
         /// Message error
         /// </summary>
         public string ErrorMessage { get; set; } = "OK";
@@ -106,6 +100,7 @@ namespace SpeedwayDatabaseViewModel
         /// </summary>
 
         public ICommand SearchCommand { get; }
+
         #endregion
 
         #region Private Methods
@@ -203,17 +198,6 @@ namespace SpeedwayDatabaseViewModel
             }
             Riders.Remove(SelectedRider);
         }
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         #endregion
     }
 }

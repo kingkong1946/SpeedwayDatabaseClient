@@ -8,6 +8,9 @@
         xmlns:viewModel="clr-namespace:SpeedwayDatabaseViewModel;assembly=SpeedwayDatabaseViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="500">
+    <Window.DataContext>
+        <viewModel:BaseViewModel/>
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -38,7 +41,12 @@
                     IsReadOnly="False"
                     AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" ></DataGridTextColumn>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                        <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
+                        <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
+                        <DataGridTextColumn Header="Country" Binding="{Binding Country}"/>
+                        <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate}"/>
+                        <DataGridTextColumn Header="Team ID" Binding="{Binding TeamsId}"/>
                     </DataGrid.Columns>
                     
                     <i:Interaction.Triggers>
