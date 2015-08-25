@@ -93,10 +93,12 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
-        public IEnumerable<Rider> Search()
+        public IEnumerable<Rider> GetRecords()
         {
             var query = $"SELECT * FROM riders WHERE{_query};";
             var anwser = _riders.SqlQuery(query, _params).ToList();
+            _query.Clear();
+            _params.Clear();
             return anwser;
         }
 

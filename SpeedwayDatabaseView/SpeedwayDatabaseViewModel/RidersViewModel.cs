@@ -114,13 +114,9 @@ namespace SpeedwayDatabaseViewModel
         {
             try
             {
-                using (var context = new SpeedwayEntities())
+                using (var context = new RiderRepository())
                 {
-                    var riders = context.Riders;
-                    riders.Attach(SelectedRider);
-                    var entry = context.Entry(SelectedRider);
-                    entry.State = EntityState.Modified;
-                    context.SaveChanges();
+                    context.Update(SelectedRider);
                 }
             }
             catch (Exception e)
@@ -139,13 +135,9 @@ namespace SpeedwayDatabaseViewModel
             Riders = new ObservableCollection<Rider>();
             try
             {
-                using (var entity = new SpeedwayEntities())
+                using (var context = new RiderRepository())
                 {
-                    var riders = entity.Riders;
-                    foreach (var rider in riders)
-                    {
-                        Riders.Add(rider);
-                    }
+                    Riders = context
                 }
             }
             catch (Exception e)

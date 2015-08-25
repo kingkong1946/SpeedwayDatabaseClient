@@ -11,6 +11,6 @@ namespace SpeedwayDatabaseModel
         void Add(T record);
         void Delete(T record);
         void Update(T record);
-        IEnumerable<T> Search();
+        IEnumerable<T> GetRecords();
     }
 }
