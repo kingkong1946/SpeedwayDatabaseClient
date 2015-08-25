@@ -9,16 +9,16 @@ namespace SpeedwayDatabaseModel
 {
     public class BaseRepository : IDisposable
     {
-        private readonly SpeedwayEntities _context = new SpeedwayEntities();
+        protected readonly SpeedwayEntities Context = new SpeedwayEntities();
 
-        public void Upload()
+        public virtual void Upload()
         {
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public void Dispose()
         {
-            _context.Dispose();
+            Context.Dispose();
         }
     }
 }

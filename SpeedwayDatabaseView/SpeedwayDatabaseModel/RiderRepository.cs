@@ -1,45 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SpeedwayDAL;
 
 namespace SpeedwayDatabaseModel
 {
-    public class RiderRepository
+    public class RiderRepository : BaseRepository, IRepository<Rider>
     {
-        public RiderRepository(int id, string firstName, string lastName, string country, int? teamId, string birthDate)
+        private readonly DbSet<Rider> _riders;
+        private readonly List<SqlParameter> _params = new List<SqlParameter>();
+        private readonly StringBuilder _query = new StringBuilder();
+
+        public RiderRepository()
         {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            Country = country;
-            TeamId = teamId;
-            BirthDate = birthDate;
+            _riders = Context.Riders;
         }
 
-        public RiderRepository() : this(0, string.Empty, string.Empty, string.Empty, null, string.Empty)
+        public void Add(Rider record)
         {
+            _riders.Add(record);
         }
 
-        public int Id { get; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Country { get; set; }
-        public int? TeamId { get; set; }
-
-        private DateTime _birthDate;
-        public string BirthDate
+        public void Delete(Rider record)
         {
-            get { return _birthDate.ToShortDateString(); }
-            set
-            {
-                DateTime.TryParseExact(value, _dateFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal,
-                    out _birthDate);
-            }
+            _riders.Remove(record);
         }
 
-        private readonly string[] _dateFormat = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+        public void Update(Rider record)
+        {
+            _riders.Attach(record);
+            var entry = Context.Entry(record);
+            entry.State = EntityState.Modified;
+        }
+
+        public RiderRepository ById(int id, bool flag)
+        {
+            if (!flag) return this;
+            AddAndOperator();
+            _query.Append(" id = @id");
+            _params.Add(new SqlParameter("@id", id));
+            return this;
+        }
+
+        public RiderRepository ByFirstName(string firstName, bool flag)
+        {
+            if (!flag) return this;
+            AddAndOperator();
+            _query.Append(" firstName = @firstName");
+            _params.Add(new SqlParameter("@firstName", firstName));
+            return this;
+        }
+
+        public RiderRepository ByLastName(string lastName, bool flag)
+        {
+            if (!flag) return this;
+            AddAndOperator();
+            _query.Append(" lastName = @lastName");
+            _params.Add(new SqlParameter("@lastName", lastName));
+            return this;
+        }
+
+        public RiderRepository ByCountry(string country, bool flag)
+        {
+            if (!flag) return this;
+            AddAndOperator();
+            _query.Append(" country = @country");
+            _params.Add(new SqlParameter("@country", country));
+            return this;
+        }
+
+        public RiderRepository ByBirthDate(DateTime birthDate, bool flag)
+        {
+            if (!flag) return this;
+            AddAndOperator();
+            _query.Append(" birthDate = @birthDate");
+            _params.Add(new SqlParameter("@birthDate", birthDate.ToShortDateString()));
+            return this;
+        }
+
+        public RiderRepository ByTeamId(int? teamId, bool flag)
+        {
+            if (!flag) return this;
+            AddAndOperator();
+            _query.Append(" teamId = @teamId");
+            _params.Add(new SqlParameter("@teamId", teamId));
+            return this;
+        }
+
+        public IEnumerable<Rider> Search()
+        {
+            var query = $"SELECT * FROM riders WHERE{_query};";
+            var anwser = _riders.SqlQuery(query, _params).ToList();
+            return anwser;
+        }
+
+        private bool QueryIsNotNull() => _query.Length > 0;
+
+        private void AddAndOperator()
+        {
+            if (QueryIsNotNull()) _query.Append(" AND");
+        }
     }
 }
