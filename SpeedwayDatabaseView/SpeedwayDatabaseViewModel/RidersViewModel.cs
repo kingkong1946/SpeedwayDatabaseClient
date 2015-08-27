@@ -137,11 +137,7 @@ namespace SpeedwayDatabaseViewModel
             {
                 using (var context = new RiderRepository())
                 {
-                    var riders = context.GetRecords();
-                    foreach (var rider in riders)
-                    {
-                        _riders.Add(rider);
-                    }
+                    Riders = context
                 }
             }
             catch (Exception e)
@@ -152,13 +148,22 @@ namespace SpeedwayDatabaseViewModel
 
         private void AddRowInRiders()
         {
-            var rider = new Rider();
+            var rider = new Rider()
+            {
+                BirthDate = DateTime.MinValue,
+                Country = "Unknown",
+                FirstName = "Unknown",
+                LastName = "Unknown",
+            };
+
             Riders.Add(rider);
             try
             {
-                using (var context = new RiderRepository())
+                using (var context = new SpeedwayEntities())
                 {
-                    context.Add(rider);
+                    var riders = context.Riders;
+                    riders.Add(rider);
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -171,9 +176,12 @@ namespace SpeedwayDatabaseViewModel
         {
             try
             {
-                using (var context = new RiderRepository())
+                using (var context = new SpeedwayEntities())
                 {
-                    context.Delete(SelectedRider);
+                    var riders = context.Riders;
+                    riders.Attach(SelectedRider);
+                    riders.Remove(SelectedRider);
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
