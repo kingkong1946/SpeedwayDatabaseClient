@@ -195,7 +195,7 @@
           <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Scores" Relationship="Self.FK_RiderScore" FromRole="Riders" ToRole="Scores" />
           <Property Name="Team_Id" Type="Int32" />
-          <NavigationProperty Name="Team" Relationship="masterModel.FK_RiderTeam1" FromRole="Rider" ToRole="Team" />
+          <NavigationProperty Name="Team" Relationship="masterModel.FK_RiderTeam" FromRole="Rider" ToRole="Team" />
         </EntityType>
         <EntityType Name="Score">
           <Key>
@@ -219,7 +219,7 @@
           <Property Name="LeagueId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="League" Relationship="Self.FK_LeagueTeam" FromRole="Teams" ToRole="Leagues" />
           <NavigationProperty Name="Matches" Relationship="Self.MatchTeam" FromRole="Teams" ToRole="Matches" />
-          <NavigationProperty Name="Riders" Relationship="masterModel.FK_RiderTeam1" FromRole="Team" ToRole="Rider" />
+          <NavigationProperty Name="Riders" Relationship="masterModel.FK_RiderTeam" FromRole="Team" ToRole="Rider" />
         </EntityType>
         <Association Name="FK_LeagueTeam">
           <End Role="Leagues" Type="Self.League" Multiplicity="1" />
@@ -257,18 +257,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RiderTeam">
-          <End Role="Teams" Type="Self.Team" Multiplicity="0..1" />
-          <End Role="Riders" Type="Self.Rider" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Teams">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Riders">
-              <PropertyRef Name="TeamsId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="MatchTeam">
           <End Role="Matches" Type="Self.Match" Multiplicity="*" />
           <End Role="Teams" Type="Self.Team" Multiplicity="*" />
@@ -291,20 +279,16 @@
             <End Role="Riders" EntitySet="Riders" />
             <End Role="Scores" EntitySet="Scores" />
           </AssociationSet>
-          <AssociationSet Name="FK_RiderTeam" Association="Self.FK_RiderTeam">
-            <End Role="Teams" EntitySet="Teams" />
-            <End Role="Riders" EntitySet="Riders" />
-          </AssociationSet>
           <AssociationSet Name="MatchTeam" Association="Self.MatchTeam">
             <End Role="Matches" EntitySet="Matches" />
             <End Role="Teams" EntitySet="Teams" />
           </AssociationSet>
-          <AssociationSet Name="FK_RiderTeam1" Association="masterModel.FK_RiderTeam1">
+          <AssociationSet Name="FK_RiderTeam" Association="masterModel.FK_RiderTeam">
             <End Role="Team" EntitySet="Teams" />
             <End Role="Rider" EntitySet="Riders" />
           </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_RiderTeam1">
+        <Association Name="FK_RiderTeam">
           <End Type="masterModel.Team" Role="Team" Multiplicity="0..1" />
           <End Type="masterModel.Rider" Role="Rider" Multiplicity="*" />
           <ReferentialConstraint>

@@ -10,12 +10,15 @@
         <EntityTypeShape EntityType="masterModel.Rider" Width="1.5" PointX="8.25" PointY="3.375" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.Score" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.Team" Width="1.5" PointX="6" PointY="3.375" IsExpanded="true" />
-        <AssociationConnector Association="masterModel.FK_LeagueTeam" ManuallyRouted="false" />
+        <AssociationConnector Association="masterModel.FK_LeagueTeam" ManuallyRouted="true" >
+          <ConnectorPoint PointX="4.90625" PointY="2.537985026041667" />
+          <ConnectorPoint PointX="4.90625" PointY="5.7922453154430444" />
+          <ConnectorPoint PointX="6" PointY="5.7922453154430444" />
+        </AssociationConnector>
         <AssociationConnector Association="masterModel.FK_MatchScore" ManuallyRouted="false" />
         <AssociationConnector Association="masterModel.FK_RiderScore" ManuallyRouted="false" />
-        <AssociationConnector Association="masterModel.FK_RiderTeam" ManuallyRouted="false" />
         <AssociationConnector Association="masterModel.MatchTeam" ManuallyRouted="false" />
-        <AssociationConnector Association="masterModel.FK_RiderTeam1" />
+        <AssociationConnector Association="masterModel.FK_RiderTeam" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
