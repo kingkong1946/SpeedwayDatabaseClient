@@ -15,6 +15,7 @@
         <AssociationConnector Association="masterModel.FK_RiderScore" ManuallyRouted="false" />
         <AssociationConnector Association="masterModel.FK_RiderTeam" ManuallyRouted="false" />
         <AssociationConnector Association="masterModel.MatchTeam" ManuallyRouted="false" />
+        <AssociationConnector Association="masterModel.FK_RiderTeam1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

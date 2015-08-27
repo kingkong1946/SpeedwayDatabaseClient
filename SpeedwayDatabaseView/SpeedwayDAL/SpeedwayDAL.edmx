@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="masterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="masterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Leagues">
           <Key>
             <PropertyRef Name="Id" />
@@ -37,7 +37,7 @@
           <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="BirthDate" Type="date" Nullable="false" />
           <Property Name="Country" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Teams_Id" Type="int" />
+          <Property Name="Team_Id" Type="int" />
         </EntityType>
         <EntityType Name="Scores">
           <Key>
@@ -126,7 +126,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Riders">
-              <PropertyRef Name="Teams_Id" />
+              <PropertyRef Name="Team_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -162,8 +162,7 @@
             <End Role="Riders" EntitySet="Riders" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="masterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -192,11 +191,11 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="BirthDate" Type="DateTime" Nullable="false" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TeamsId" Type="Int32" />
           <NavigationProperty Name="Scores" Relationship="Self.FK_RiderScore" FromRole="Riders" ToRole="Scores" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_RiderTeam" FromRole="Riders" ToRole="Teams" />
+          <Property Name="Team_Id" Type="Int32" />
+          <NavigationProperty Name="Team" Relationship="masterModel.FK_RiderTeam1" FromRole="Rider" ToRole="Team" />
         </EntityType>
         <EntityType Name="Score">
           <Key>
@@ -219,8 +218,8 @@
           <Property Name="StadiumCapacity" Type="Int32" Nullable="false" />
           <Property Name="LeagueId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="League" Relationship="Self.FK_LeagueTeam" FromRole="Teams" ToRole="Leagues" />
-          <NavigationProperty Name="Riders" Relationship="Self.FK_RiderTeam" FromRole="Teams" ToRole="Riders" />
           <NavigationProperty Name="Matches" Relationship="Self.MatchTeam" FromRole="Teams" ToRole="Matches" />
+          <NavigationProperty Name="Riders" Relationship="masterModel.FK_RiderTeam1" FromRole="Team" ToRole="Rider" />
         </EntityType>
         <Association Name="FK_LeagueTeam">
           <End Role="Leagues" Type="Self.League" Multiplicity="1" />
@@ -300,7 +299,23 @@
             <End Role="Matches" EntitySet="Matches" />
             <End Role="Teams" EntitySet="Teams" />
           </AssociationSet>
+          <AssociationSet Name="FK_RiderTeam1" Association="masterModel.FK_RiderTeam1">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="Rider" EntitySet="Riders" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_RiderTeam1">
+          <End Type="masterModel.Team" Role="Team" Multiplicity="0..1" />
+          <End Type="masterModel.Rider" Role="Rider" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Rider">
+              <PropertyRef Name="Team_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -327,12 +342,12 @@
           <EntitySetMapping Name="Riders">
             <EntityTypeMapping TypeName="masterModel.Rider">
               <MappingFragment StoreEntitySet="Riders">
+                <ScalarProperty Name="Team_Id" ColumnName="Team_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="TeamsId" ColumnName="Teams_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
