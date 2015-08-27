@@ -95,8 +95,8 @@ namespace SpeedwayDatabaseModel
 
         public IEnumerable<Rider> GetRecords()
         {
-            var query = $"SELECT * FROM riders WHERE{_query};";
-            var anwser = _riders.SqlQuery(query, _params).ToList();
+            var query = $"SELECT * FROM riders{_query};";
+            var anwser = _riders.SqlQuery(query, _params.Count == 0 ? null : _params).ToList();
             _query.Clear();
             _params.Clear();
             return anwser;
@@ -106,7 +106,7 @@ namespace SpeedwayDatabaseModel
 
         private void AddAndOperator()
         {
-            if (QueryIsNotNull()) _query.Append(" AND");
+            _query.Append(QueryIsNotNull() ? " AND" : " WHERE");
         }
     }
 }
