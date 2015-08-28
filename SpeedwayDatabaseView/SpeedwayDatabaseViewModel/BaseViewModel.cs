@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,6 @@ namespace SpeedwayDatabaseViewModel
         /// Message error
         /// </summary>
         private string _errorMessage = "OK";
-
         public string ErrorMessage
         {
             get { return _errorMessage; }
@@ -54,7 +54,6 @@ namespace SpeedwayDatabaseViewModel
         /// Rider selected from table
         /// </summary>
         private Rider _selectedRider;
-
         public Rider SelectedRider
         {
             get { return _selectedRider; }
@@ -79,7 +78,21 @@ namespace SpeedwayDatabaseViewModel
             }
         }
 
-        private IRepository<> _table;
+        private BaseRepository _table;
+
+        /// <summary>
+        /// Table selected from TabControl
+        /// </summary>
+        private string _selectedTable = "riders";
+        public string SelectedTable
+        {
+            get { return _selectedTable; }
+            set
+            {
+                _selectedTable = value;
+                OnPropertyChanged("SelectedTable");
+            }
+        }
 
         #endregion
 
@@ -119,14 +132,17 @@ namespace SpeedwayDatabaseViewModel
         {
             try
             {
-                using (var context = new RiderRepository())
-                {
-                    context.Update(SelectedRider);
-                }
+                StartContext();
+                _table.Start();
+                _table.Update(SelectedRider);
             }
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
+            }
+            finally
+            {
+                _table?.Dispose();
             }
         }
 
@@ -138,21 +154,26 @@ namespace SpeedwayDatabaseViewModel
         private void Load()
         {
             Riders = new ObservableCollection<Rider>();
+            IEnumerable<object> riders = null;
             try
             {
-                IEnumerable<Rider> riders = null;
-                using (var context = new RiderRepository())
-                {
-                    riders = context.GetRecords();
-                }
-                foreach (var rider in riders)
-                {
-                    Riders.Add(rider);
-                }
+                StartContext();
+                _table.Start();
+                riders = _table.GetRecords().ToList();
             }
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
+            }
+            finally
+            {
+                _table?.Dispose();
+            }
+
+            if (riders == null) return;
+            foreach (var item in riders.OfType<Rider>())
+            {
+                Riders.Add(item);
             }
         }
 
@@ -162,14 +183,17 @@ namespace SpeedwayDatabaseViewModel
             Riders.Add(rider);
             try
             {
-                using (var context = new RiderRepository())
-                {
-                    context.Add(rider);
-                }
+                StartContext();
+                _table.Start();
+                _table.Add(rider);
             }
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
+            }
+            finally
+            {
+                _table?.Dispose();
             }
         }
 
@@ -177,17 +201,34 @@ namespace SpeedwayDatabaseViewModel
         {
             try
             {
-                using (var context = new RiderRepository())
-                {
-                    context.Delete(SelectedRider);
-                }
+                StartContext();
+                _table.Start();
+                _table.Delete(SelectedRider);
             }
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
             }
+            finally
+            {
+                _table?.Dispose();
+            }
             Riders.Remove(SelectedRider);
         }
+
+        private void StartContext()
+        {
+            switch (SelectedTable.ToLower())
+            {
+                case "riders":
+                    _table = new RiderRepository();
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid name of table");
+            }
+        }
+
         #endregion
 
         #region INotifyPropertyChanged

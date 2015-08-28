@@ -11,7 +11,7 @@ using SpeedwayDAL;
 
 namespace SpeedwayDatabaseModel
 {
-    public class RiderRepository : BaseRepository, IRepository
+    public class RiderRepository : BaseRepository
     {
         #region Fields
 
@@ -36,7 +36,7 @@ namespace SpeedwayDatabaseModel
         /// Adds record to local table
         /// </summary>
         /// <param name="record">Record to add</param>
-        public void Add(object record)
+        public override void Add(object record)
         {
             Rider rider;
             TryCast(record, out rider);
@@ -47,7 +47,7 @@ namespace SpeedwayDatabaseModel
         /// Delete record from local table
         /// </summary>
         /// <param name="record">Record to delete</param>
-        public void Delete(object record)
+        public override void Delete(object record)
         {
             Rider rider;
             TryCast(record, out rider);
@@ -58,7 +58,7 @@ namespace SpeedwayDatabaseModel
         /// Update record into local table
         /// </summary>
         /// <param name="record">Record to update</param>
-        public void Update(object record)
+        public override void Update(object record)
         {
             Rider rider;
             TryCast(record, out rider);
@@ -71,7 +71,7 @@ namespace SpeedwayDatabaseModel
         /// Return collection of records that comply with specifed parameters
         /// </summary>
         /// <returns>Collection of records</returns>
-        public IEnumerable<object> GetRecords()
+        public override IEnumerable<object> GetRecords()
         {
             var query = $"SELECT * FROM riders{_query};";
             var anwser = _riders.SqlQuery(query, _params.Count == 0 ? null : _params).ToList();
