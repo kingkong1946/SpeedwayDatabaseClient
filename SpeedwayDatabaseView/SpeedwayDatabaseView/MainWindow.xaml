@@ -46,7 +46,7 @@
                         <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
                         <DataGridTextColumn Header="Country" Binding="{Binding Country}"/>
                         <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate}"/>
-                        <DataGridTextColumn Header="Team ID" Binding="{Binding TeamsId}"/>
+                        <DataGridTextColumn Header="Team ID" Binding="{Binding Team_Id}"/>
                     </DataGrid.Columns>
                     
                     <i:Interaction.Triggers>

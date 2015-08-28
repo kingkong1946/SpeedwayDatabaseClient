@@ -11,34 +11,81 @@ using SpeedwayDAL;
 
 namespace SpeedwayDatabaseModel
 {
-    public class RiderRepository : BaseRepository, IRepository<Rider>
+    public class RiderRepository : BaseRepository, IRepository
     {
+        #region Fields
+
         private readonly DbSet<Rider> _riders;
         private readonly List<SqlParameter> _params = new List<SqlParameter>();
         private readonly StringBuilder _query = new StringBuilder();
+
+        #endregion
+
+        #region Constructors
 
         public RiderRepository()
         {
             _riders = Context.Riders;
         }
 
-        public void Add(Rider record)
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Adds record to local table
+        /// </summary>
+        /// <param name="record">Record to add</param>
+        public void Add(object record)
         {
-            _riders.Add(record);
+            Rider rider;
+            TryCast(record, out rider);
+            _riders.Add(rider);
         }
 
-        public void Delete(Rider record)
+        /// <summary>
+        /// Delete record from local table
+        /// </summary>
+        /// <param name="record">Record to delete</param>
+        public void Delete(object record)
         {
-            _riders.Remove(record);
+            Rider rider;
+            TryCast(record, out rider);
+            _riders.Remove(rider);
         }
 
-        public void Update(Rider record)
+        /// <summary>
+        /// Update record into local table
+        /// </summary>
+        /// <param name="record">Record to update</param>
+        public void Update(object record)
         {
-            _riders.Attach(record);
-            var entry = Context.Entry(record);
+            Rider rider;
+            TryCast(record, out rider);
+            _riders.Attach(rider);
+            var entry = Context.Entry(rider);
             entry.State = EntityState.Modified;
         }
 
+        /// <summary>
+        /// Return collection of records that comply with specifed parameters
+        /// </summary>
+        /// <returns>Collection of records</returns>
+        public IEnumerable<object> GetRecords()
+        {
+            var query = $"SELECT * FROM riders{_query};";
+            var anwser = _riders.SqlQuery(query, _params.Count == 0 ? null : _params).ToList();
+            _query.Clear();
+            _params.Clear();
+            return anwser;
+        }
+
+        /// <summary>
+        /// Add ID parameter to query
+        /// </summary>
+        /// <param name="id">Parameter</param>
+        /// <param name="flag">Allow to add parameter</param>
+        /// <returns>Current instance</returns>
         public RiderRepository ById(int id, bool flag)
         {
             if (!flag) return this;
@@ -48,6 +95,12 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
+        /// <summary>
+        /// Add first name parameter to query
+        /// </summary>
+        /// <param name="firstName">Parameter</param>
+        /// <param name="flag">Allow to add parameter</param>
+        /// <returns>Current instance</returns>
         public RiderRepository ByFirstName(string firstName, bool flag)
         {
             if (!flag) return this;
@@ -57,6 +110,12 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
+        /// <summary>
+        /// Add last name parameter to query
+        /// </summary>
+        /// <param name="lastName">Parameter</param>
+        /// <param name="flag">Allow to add parameter</param>
+        /// <returns>Current instance</returns>
         public RiderRepository ByLastName(string lastName, bool flag)
         {
             if (!flag) return this;
@@ -66,6 +125,12 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
+        /// <summary>
+        /// Add country parameter to query
+        /// </summary>
+        /// <param name="country">Parameter</param>
+        /// <param name="flag">Allow to add parameter</param>
+        /// <returns>Current instance</returns>
         public RiderRepository ByCountry(string country, bool flag)
         {
             if (!flag) return this;
@@ -75,6 +140,12 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
+        /// <summary>
+        /// Add birth date parameter to query
+        /// </summary>
+        /// <param name="birthDate">Parameter</param>
+        /// <param name="flag">Allow to add parameter</param>
+        /// <returns>Current instance</returns>
         public RiderRepository ByBirthDate(DateTime birthDate, bool flag)
         {
             if (!flag) return this;
@@ -84,6 +155,12 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
+        /// <summary>
+        /// Add team ID parameter to query
+        /// </summary>
+        /// <param name="teamId">Parameter</param>
+        /// <param name="flag">Allow to add parameter</param>
+        /// <returns>Current instance</returns>
         public RiderRepository ByTeamId(int? teamId, bool flag)
         {
             if (!flag) return this;
@@ -93,14 +170,9 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
-        public IEnumerable<Rider> GetRecords()
-        {
-            var query = $"SELECT * FROM riders{_query};";
-            var anwser = _riders.SqlQuery(query, _params.Count == 0 ? null : _params).ToList();
-            _query.Clear();
-            _params.Clear();
-            return anwser;
-        }
+        #endregion
+
+        #region Private Methods
 
         private bool QueryIsNotNull() => _query.Length > 0;
 
@@ -108,5 +180,13 @@ namespace SpeedwayDatabaseModel
         {
             _query.Append(QueryIsNotNull() ? " AND" : " WHERE");
         }
+
+        private static void TryCast(object record, out Rider rider)
+        {
+            rider = record as Rider;
+            if (rider == null) throw new InvalidCastException("Can't cast object to Rider.");
+        }
+
+        #endregion
     }
 }

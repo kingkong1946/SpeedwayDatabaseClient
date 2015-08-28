@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SpeedwayDatabaseModel
 {
-    interface IRepository<T> where T: class 
+    public interface IRepository
     {
-        void Add(T record);
-        void Delete(T record);
-        void Update(T record);
-        IEnumerable<T> GetRecords();
+        void Add(object record);
+        void Delete(object record);
+        void Update(object record);
+        IEnumerable<object> GetRecords();
     }
 }
