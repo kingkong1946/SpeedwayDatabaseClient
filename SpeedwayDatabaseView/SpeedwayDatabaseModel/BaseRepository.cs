@@ -9,7 +9,7 @@ namespace SpeedwayDatabaseModel
 {
     public abstract class BaseRepository : IDisposable
     {
-        protected SpeedwayEntities Context = new SpeedwayEntities();
+        protected SpeedwayEntities Context;
 
         public void Start()
         {

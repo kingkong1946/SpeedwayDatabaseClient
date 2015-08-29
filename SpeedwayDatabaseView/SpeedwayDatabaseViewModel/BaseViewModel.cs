@@ -59,6 +59,7 @@ namespace SpeedwayDatabaseViewModel
             get { return _selectedRider; }
             set
             {
+                RowEdited();
                 _selectedRider = value;
                 OnPropertyChanged("SelectedRider");
             }
