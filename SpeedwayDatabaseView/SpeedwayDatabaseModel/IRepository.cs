@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,5 +13,6 @@ namespace SpeedwayDatabaseModel
         void Delete(T record);
         void Update(T record);
         IEnumerable<T> GetRecords();
+        ObservableCollection<T> GetLocal();
     }
 }

@@ -18,16 +18,16 @@ using SpeedwayDAL;
 namespace SpeedwayDatabaseViewModel
 {
     /// <summary>
-    /// Is responsible for communication with Riders
+    /// Is responsible for communication with Collection
     /// </summary>
-    public class RidersViewModel : BaseViewModel
+    public class TableViewModel : BaseViewModel 
     {
         #region Constructors
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public RidersViewModel()
+        public TableViewModel()
         {
             LoadTableCommand = new RelayCommand(o => Load());
             AddRowCommand = new RelayCommand(o => AddRowInRiders());
@@ -42,37 +42,46 @@ namespace SpeedwayDatabaseViewModel
         /// <summary>
         /// Message error
         /// </summary>
-        public string ErrorMessage { get; set; } = "OK";
-
-        /// <summary>
-        /// Rider selected from table
-        /// </summary>
-        private Rider _selectedRider;
-        public Rider SelectedRider
+        private string _errorMessage = "OK";
+        public string ErrorMessage
         {
-            get
-            {
-                return _selectedRider;
-            }
+            get { return _errorMessage; }
             set
             {
-                RowEdited();
-                _selectedRider = value;
-                OnPropertyChanged("SelectedRider");
+                _errorMessage = value;
+                OnPropertyChanged(ErrorMessage);
             }
         }
 
         /// <summary>
-        /// Riders Collection 
+        /// Rider selected from table
         /// </summary>
-        private ObservableCollection<Rider> _riders;
-        public ObservableCollection<Rider> Riders
+        private Rider _selectedItem;
+        public Rider SelectedItem
         {
-            get { return _riders; }
+            get
+            {
+                return _selectedItem;
+            }
             set
             {
-                _riders = value;
-                OnPropertyChanged("Riders");
+                //RowEdited();
+                _selectedItem = value;
+                OnPropertyChanged("SelectedItem");
+            }
+        }
+
+        /// <summary>
+        /// Collection Collection 
+        /// </summary>
+        private ObservableCollection<Rider> _collection;
+        public ObservableCollection<Rider> Collection
+        {
+            get { return _collection; }
+            set
+            {
+                _collection = value;
+                OnPropertyChanged("Collection");
             }
         }
 
@@ -104,10 +113,10 @@ namespace SpeedwayDatabaseViewModel
         #endregion
 
         #region Private Methods
-        
+
         private void Search()
         {
-            
+
         }
 
         private void RowEdited()
@@ -116,7 +125,7 @@ namespace SpeedwayDatabaseViewModel
             {
                 using (var context = new RiderRepository())
                 {
-                    context.Update(SelectedRider);
+                    context.Update(SelectedItem);
                 }
             }
             catch (Exception e)
@@ -127,12 +136,12 @@ namespace SpeedwayDatabaseViewModel
 
         private bool IsSelected(object parameter)
         {
-            return SelectedRider != null;
+            return SelectedItem != null;
         }
 
         private void Load()
         {
-            Riders = new ObservableCollection<Rider>();
+            Collection = new ObservableCollection<T>();
             try
             {
                 IEnumerable<Rider> riders = null;
@@ -142,7 +151,7 @@ namespace SpeedwayDatabaseViewModel
                 }
                 foreach (var rider in riders)
                 {
-                    Riders.Add(rider);
+                    Collection.Add(rider);
                 }
             }
             catch (Exception e)
@@ -154,7 +163,7 @@ namespace SpeedwayDatabaseViewModel
         private void AddRowInRiders()
         {
             var rider = new Rider();
-            Riders.Add(rider);
+            Collection.Add(rider);
             try
             {
                 using (var context = new RiderRepository())
@@ -174,14 +183,14 @@ namespace SpeedwayDatabaseViewModel
             {
                 using (var context = new RiderRepository())
                 {
-                    context.Delete(SelectedRider);
+                    context.Delete(SelectedItem);
                 }
             }
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
             }
-            Riders.Remove(SelectedRider);
+            Collection.Remove(SelectedItem);
         }
         #endregion
     }

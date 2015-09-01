@@ -125,6 +125,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpeedwayDAL\SpeedwayDAL.csproj">
+      <Project>{fcbbe156-3135-4bc5-9170-f8ed6bf92f77}</Project>
+      <Name>SpeedwayDAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpeedwayDatabaseViewModel\SpeedwayDatabaseViewModel.csproj">
       <Project>{7c482699-a4bc-4726-82a6-9ef66fadd3f0}</Project>
       <Name>SpeedwayDatabaseViewModel</Name>

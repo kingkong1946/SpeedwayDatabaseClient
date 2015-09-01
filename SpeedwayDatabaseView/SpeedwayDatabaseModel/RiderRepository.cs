@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -100,6 +101,11 @@ namespace SpeedwayDatabaseModel
             _query.Clear();
             _params.Clear();
             return anwser;
+        }
+
+        public ObservableCollection<Rider> GetLocal()
+        {
+            return _riders.Local;
         }
 
         private bool QueryIsNotNull() => _query.Length > 0;

@@ -1,11 +1,13 @@
 ﻿<Window x:Class="SpeedwayDatabaseView.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:v4="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedwayDatabaseView"
         xmlns:viewModel="clr-namespace:SpeedwayDatabaseViewModel;assembly=SpeedwayDatabaseViewModel"
+        xmlns:dal="clr-namespace:SpeedwayDAL;assembly=SpeedwayDAL"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="500">
     <Window.DataContext>
@@ -25,14 +27,14 @@
         </Grid.ColumnDefinitions>
 
         <TabControl Grid.Row="0" Grid.ColumnSpan="100">
-            <TabItem Header="Riders">
+            <TabItem Header="Collection">
                 <TabItem.DataContext>
-                    <viewModel:RidersViewModel/>
+                    <viewModel:TableViewModel x:TypeArguments="dal:Rider"/>
                 </TabItem.DataContext>
                 <DataGrid 
                     x:Name="RiderDataGrid" 
-                    ItemsSource="{Binding Riders}"
-                    SelectedItem="{Binding Path=SelectedRider, Mode=TwoWay}"
+                    ItemsSource="{Binding Collection}"
+                    SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
                     IsSynchronizedWithCurrentItem="True"
                     CanUserAddRows="False"
                     CanUserReorderColumns="False"

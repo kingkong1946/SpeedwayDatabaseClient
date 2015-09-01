@@ -11,13 +11,6 @@ namespace SpeedwayDatabaseViewModel
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        /// <summary>
-        /// Number of merge columns for ToolBar and DataGrid
-        /// </summary>
-        private const int _MergeAll = 3;
-
-        public int MergeAll => _MergeAll;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
