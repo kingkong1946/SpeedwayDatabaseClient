@@ -24,7 +24,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <TabControl Grid.Row="0" Grid.ColumnSpan="{Binding MergeAll}">
+        <TabControl Grid.Row="0" Grid.ColumnSpan="100">
             <TabItem Header="Riders">
                 <TabItem.DataContext>
                     <viewModel:RidersViewModel/>
@@ -46,7 +46,7 @@
                         <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
                         <DataGridTextColumn Header="Country" Binding="{Binding Country}"/>
                         <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate}"/>
-                        <DataGridTextColumn Header="Team ID" Binding="{Binding TeamsId}"/>
+                        <DataGridTextColumn Header="Team ID" Binding="{Binding TeamId}"/>
                     </DataGrid.Columns>
                     
                     <i:Interaction.Triggers>
@@ -54,10 +54,6 @@
                             <i:InvokeCommandAction Command="{Binding LoadTableCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    
-                    <DataGrid.InputBindings>
-                        <KeyBinding Key="Delete" Command="{Binding DeleteRowCommand}"/>
-                    </DataGrid.InputBindings>
                 </DataGrid>
             </TabItem>
         </TabControl>
@@ -66,7 +62,7 @@
         <Button Grid.Row="1" Grid.Column="1" Content="Delete Selected Row" Command="{Binding DeleteRowCommand}"/>
         <Button Grid.Row="1" Grid.Column="2" Content="Search" Click="SearchRecords"/>
 
-        <ToolBar Grid.Row="2" Grid.ColumnSpan="{Binding MergeAll}">
+        <ToolBar Grid.Row="2" Grid.ColumnSpan="100">
             <Label Content="{Binding ErrorMessage}"/>
         </ToolBar>
     </Grid>
