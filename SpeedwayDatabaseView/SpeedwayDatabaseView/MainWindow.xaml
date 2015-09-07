@@ -3,16 +3,24 @@
         xmlns:v4="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedwayDatabaseView"
         xmlns:viewModel="clr-namespace:SpeedwayDatabaseViewModel;assembly=SpeedwayDatabaseViewModel"
         xmlns:dal="clr-namespace:SpeedwayDAL;assembly=SpeedwayDAL"
+        xmlns:viewModels="clr-namespace:SpeedwayDatabaseViewModel.ViewModels;assembly=SpeedwayDatabaseViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="500">
     <Window.DataContext>
-        <viewModel:BaseViewModel/>
+        <viewModels:TableViewModel/>
     </Window.DataContext>
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding OnClosingCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -24,13 +32,11 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
         <TabControl Grid.Row="0" Grid.ColumnSpan="100">
             <TabItem Header="Collection">
-                <TabItem.DataContext>
-                    <viewModel:TableViewModel x:TypeArguments="dal:Rider"/>
-                </TabItem.DataContext>
                 <DataGrid 
                     x:Name="RiderDataGrid" 
                     ItemsSource="{Binding Collection}"
@@ -53,16 +59,20 @@
                     
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Loaded">
-                            <i:InvokeCommandAction Command="{Binding LoadTableCommand}"/>
+                            <i:InvokeCommandAction Command="{Binding LoadCommand}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="OnClosing">
+                            <i:InvokeCommandAction Command="{Binding OnClosingCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </DataGrid>
             </TabItem>
         </TabControl>
 
-        <Button Grid.Row="1" Grid.Column="0" Content="Add Row" Command="{Binding AddRowCommand}"/>
-        <Button Grid.Row="1" Grid.Column="1" Content="Delete Selected Row" Command="{Binding DeleteRowCommand}"/>
+        <Button Grid.Row="1" Grid.Column="0" Content="Add Row" Command="{Binding AddCommand}"/>
+        <Button Grid.Row="1" Grid.Column="1" Content="Delete Selected Row" Command="{Binding DeleteCommand}"/>
         <Button Grid.Row="1" Grid.Column="2" Content="Search" Click="SearchRecords"/>
+        <Button Grid.Row="1" Grid.Column="3" Content="Save Changes" Command="{Binding SaveCommand}"/>
 
         <ToolBar Grid.Row="2" Grid.ColumnSpan="100">
             <Label Content="{Binding ErrorMessage}"/>

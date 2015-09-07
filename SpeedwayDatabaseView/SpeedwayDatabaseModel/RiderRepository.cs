@@ -105,6 +105,7 @@ namespace SpeedwayDatabaseModel
 
         public ObservableCollection<Rider> GetLocal()
         {
+            _riders.Load();
             return _riders.Local;
         }
 

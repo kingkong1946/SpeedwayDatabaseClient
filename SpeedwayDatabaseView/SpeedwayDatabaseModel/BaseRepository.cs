@@ -11,7 +11,7 @@ namespace SpeedwayDatabaseModel
     {
         protected readonly SpeedwayEntities Context = new SpeedwayEntities();
 
-        public virtual void Upload()
+        public virtual void Save()
         {
             Context.SaveChanges();
         }
