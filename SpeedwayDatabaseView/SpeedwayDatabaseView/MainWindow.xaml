@@ -14,6 +14,9 @@
     <Window.DataContext>
         <viewModels:TableViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <viewModel:DateBirthConverter x:Key="DateBirthConverter"/>
+    </Window.Resources>
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -65,7 +68,19 @@
                         <DataGridTextColumn Header="First Name" Binding="{Binding FirstName, ValidatesOnDataErrors=True}"/>
                         <DataGridTextColumn Header="Last Name" Binding="{Binding LastName, ValidatesOnDataErrors=True}"/>
                         <DataGridTextColumn Header="Country" Binding="{Binding Country, ValidatesOnDataErrors=True}"/>
-                        <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate, ValidatesOnDataErrors=True}"/>
+                        <!--<DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate, ValidatesOnDataErrors=True}"/>-->
+                        <DataGridTemplateColumn Header="Birth Date">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding BirthDate, Converter={StaticResource DateBirthConverter}}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <DatePicker SelectedDate="{Binding BirthDate}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Team ID" Binding="{Binding TeamId}"/>
                     </DataGrid.Columns>
                     
