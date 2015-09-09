@@ -61,6 +61,7 @@
     <Compile Include="Rider.cs">
       <DependentUpon>SpeedwayDAL.tt</DependentUpon>
     </Compile>
+    <Compile Include="RiderValidation.cs" />
     <Compile Include="Score.cs">
       <DependentUpon>SpeedwayDAL.tt</DependentUpon>
     </Compile>
