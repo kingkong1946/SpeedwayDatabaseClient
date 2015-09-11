@@ -15,37 +15,18 @@ namespace SpeedwayDatabaseModel
     public class RiderRepository : BaseRepository, IRepository<Rider>
     {
         private readonly DbSet<Rider> _riders;
-        private readonly List<SqlParameter> _params = new List<SqlParameter>();
-        private readonly StringBuilder _query = new StringBuilder();
 
         public RiderRepository()
         {
             _riders = Context.Riders;
         }
 
-        public void Add(Rider record)
-        {
-            _riders.Add(record);
-        }
-
-        public void Delete(Rider record)
-        {
-            _riders.Remove(record);
-        }
-
-        public void Update(Rider record)
-        {
-            _riders.Attach(record);
-            var entry = Context.Entry(record);
-            entry.State = EntityState.Modified;
-        }
-
         public RiderRepository ById(int id, bool flag)
         {
             if (!flag) return this;
             AddAndOperator();
-            _query.Append(" id = @id");
-            _params.Add(new SqlParameter("@id", id));
+            Query.Append(" id = @id");
+            Params.Add(new SqlParameter("@id", id));
             return this;
         }
 
@@ -53,8 +34,8 @@ namespace SpeedwayDatabaseModel
         {
             if (!flag) return this;
             AddAndOperator();
-            _query.Append(" firstName = @firstName");
-            _params.Add(new SqlParameter("@firstName", firstName));
+            Query.Append(" firstName = @firstName");
+            Params.Add(new SqlParameter("@firstName", firstName));
             return this;
         }
 
@@ -62,8 +43,8 @@ namespace SpeedwayDatabaseModel
         {
             if (!flag) return this;
             AddAndOperator();
-            _query.Append(" lastName = @lastName");
-            _params.Add(new SqlParameter("@lastName", lastName));
+            Query.Append(" lastName = @lastName");
+            Params.Add(new SqlParameter("@lastName", lastName));
             return this;
         }
 
@@ -71,8 +52,8 @@ namespace SpeedwayDatabaseModel
         {
             if (!flag) return this;
             AddAndOperator();
-            _query.Append(" country = @country");
-            _params.Add(new SqlParameter("@country", country));
+            Query.Append(" country = @country");
+            Params.Add(new SqlParameter("@country", country));
             return this;
         }
 
@@ -80,8 +61,8 @@ namespace SpeedwayDatabaseModel
         {
             if (!flag) return this;
             AddAndOperator();
-            _query.Append(" birthDate = @birthDate");
-            _params.Add(new SqlParameter("@birthDate", birthDate.ToShortDateString()));
+            Query.Append(" birthDate = @birthDate");
+            Params.Add(new SqlParameter("@birthDate", birthDate.ToShortDateString()));
             return this;
         }
 
@@ -89,17 +70,17 @@ namespace SpeedwayDatabaseModel
         {
             if (!flag) return this;
             AddAndOperator();
-            _query.Append(" teamId = @teamId");
-            _params.Add(new SqlParameter("@teamId", teamId));
+            Query.Append(" teamId = @teamId");
+            Params.Add(new SqlParameter("@teamId", teamId));
             return this;
         }
 
         public IEnumerable<Rider> GetRecords()
         {
-            var query = $"SELECT * FROM riders{_query};";
-            var anwser = _riders.SqlQuery(query, _params.Count == 0 ? null : _params).ToList();
-            _query.Clear();
-            _params.Clear();
+            var query = $"SELECT * FROM riders{Query};";
+            var anwser = _riders.SqlQuery(query, Params.Count == 0 ? null : Params).ToList();
+            Query.Clear();
+            Params.Clear();
             return anwser;
         }
 
@@ -107,13 +88,6 @@ namespace SpeedwayDatabaseModel
         {
             _riders.Load();
             return _riders.Local;
-        }
-
-        private bool QueryIsNotNull() => _query.Length > 0;
-
-        private void AddAndOperator()
-        {
-            _query.Append(QueryIsNotNull() ? " AND" : " WHERE");
         }
     }
 }
