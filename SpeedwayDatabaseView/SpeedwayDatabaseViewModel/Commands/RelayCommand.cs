@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SpeedwayDatabaseViewModel
+namespace SpeedwayDatabaseViewModel.Commands
 {
     public class RelayCommand : ICommand
     {
@@ -13,7 +13,7 @@ namespace SpeedwayDatabaseViewModel
         #region Constructors
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
-            if (execute == null) throw new ArgumentNullException("execute is NULL");
+            if (execute == null) throw new ArgumentNullException("Execute can't by null.");
             _canExecute = canExecute;
             _execute = execute;
         }

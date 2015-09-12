@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using SpeedwayDatabaseModel;
+using SpeedwayDatabaseViewModel.Commands;
 using SpeedwayDAL;
 
 namespace SpeedwayDatabaseViewModel.ViewModels

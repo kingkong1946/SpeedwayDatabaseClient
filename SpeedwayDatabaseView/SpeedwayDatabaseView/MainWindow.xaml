@@ -9,13 +9,14 @@
         xmlns:viewModel="clr-namespace:SpeedwayDatabaseViewModel;assembly=SpeedwayDatabaseViewModel"
         xmlns:dal="clr-namespace:SpeedwayDAL;assembly=SpeedwayDAL"
         xmlns:viewModels="clr-namespace:SpeedwayDatabaseViewModel.ViewModels;assembly=SpeedwayDatabaseViewModel"
+        xmlns:converters="clr-namespace:SpeedwayDatabaseViewModel.Converters;assembly=SpeedwayDatabaseViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="500">
     <Window.DataContext>
         <viewModels:TableViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <viewModel:DateBirthConverter x:Key="DateBirthConverter"/>
+        <converters:DateBirthConverter x:Key="DateBirthConverter"/>
     </Window.Resources>
     
     <i:Interaction.Triggers>
