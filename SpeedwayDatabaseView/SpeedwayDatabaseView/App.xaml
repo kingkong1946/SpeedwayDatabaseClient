@@ -2,8 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SpeedwayDatabaseView"
+             xmlns:converters="clr-namespace:SpeedwayDatabaseViewModel.Converters;assembly=SpeedwayDatabaseViewModel"
+             xmlns:viewModels="clr-namespace:SpeedwayDatabaseViewModel.ViewModels;assembly=SpeedwayDatabaseViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+        <converters:DateBirthConverter x:Key="DateBirthConverter"/>
+        <viewModels:TableViewModel x:Key="TableViewModel"/>
+        <ObjectDataProvider x:Key="SearchViewModel" ObjectInstance="{StaticResource TableViewModel}" MethodName="CreateSearchViewModel"/>
     </Application.Resources>
 </Application>

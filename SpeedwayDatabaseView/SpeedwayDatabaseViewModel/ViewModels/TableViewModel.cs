@@ -12,7 +12,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
     /// <summary>
     /// 
     /// </summary>
-    public class TableViewModel : BaseViewModel 
+    public class TableViewModel : BaseViewModel
     {
         #region Constructors
 
@@ -82,7 +82,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
 
         private string _currentRepository = "riders";
 
-        private dynamic _context;
+        public dynamic Context { get; private set; }
 
         #endregion
 
@@ -119,16 +119,18 @@ namespace SpeedwayDatabaseViewModel.ViewModels
         public ICommand SaveCommand { get; }
         #endregion
 
-        #region Private Methods
+        #region Methods
+
+        public SearchViewModel CreateSearchViewModel() => new SearchViewModel(this);
 
         private void Save()
         {
-            _context?.Save();
+            Context?.Save();
         }
 
         private void OnClosing()
         {
-            _context?.Dispose();
+            Context?.Dispose();
         }
 
         private void Search()
@@ -145,7 +147,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
         {
             try
             {
-                Collection = _context.GetLocal();
+                Collection = Context.GetLocal();
             }
             catch (Exception e)
             {
@@ -172,7 +174,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
             switch (_currentRepository.ToLower())
             {
                 case "riders":
-                    _context = new RiderRepository();
+                    Context = new RiderRepository();
                     break;
 
                 default:

@@ -1,79 +1,150 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Windows.Input;
+using SpeedwayDatabaseModel;
+using SpeedwayDatabaseViewModel.Commands;
 
 namespace SpeedwayDatabaseViewModel.ViewModels
 {
-    public class SearchViewModel : BaseViewModel
+    public class SearchViewModel : BaseViewModel, IDataErrorInfo
     {
-        #region Fields
+        #region Constructors
 
-        private static string[] DateFormats = {"dd/MM/yyyy", "dd/M/yyyy"};
-
-        private int _Id;
-        public int Id
+        public SearchViewModel(TableViewModel tableTableviewModel)
         {
-            get { return _Id; }
+            _tableviewModel = tableTableviewModel;
+
+            SearchCommand = new RelayCommand(o => Search(), o => CanSearch());
+        }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand SearchCommand { get; }
+
+        #endregion
+        
+        #region Properties
+        
+        private readonly TableViewModel _tableviewModel;
+
+        private int? _id;
+        public int? Id
+        {
+            get { return _id; }
             set
             {
-                _Id = value;
-                OnPropertyChanged("ID");
+                _id = value;
+                OnPropertyChanged(nameof(Id));
             }
         }
 
-        private string _FirstName;
+        private string _firstName;
         public string FirstName
         {
-            get { return _FirstName; }
+            get { return _firstName; }
             set
             {
-                _FirstName = value;
-                OnPropertyChanged("FirstName");
+                _firstName = value;
+                OnPropertyChanged(nameof(FirstName));
             }
         }
 
-        private string _LastName;
+        private string _lastName;
         public string LastName
         {
-            get { return _LastName; }
+            get { return _lastName; }
             set
             {
-                _LastName = value;
-                OnPropertyChanged("LastName");
+                _lastName = value;
+                OnPropertyChanged(nameof(LastName));
             }
         }
 
-        private DateTime _BirthDate;
-        public DateTime BrithDate
+        private DateTime? _birthDate;
+        public DateTime? BirthDate
         {
-            get { return _BirthDate; }
+            get { return _birthDate; }
             set
             {
-                _BirthDate = value;
-                OnPropertyChanged("BrithDate");
+                _birthDate = value;
+                OnPropertyChanged(nameof(BirthDate));
             }
         }
 
-        private string _Country;
+        private string _country;
         public string Country
         {
-            get { return _Country; }
+            get { return _country; }
             set
             {
-                _Country = value;
-                OnPropertyChanged("Country");
+                _country = value;
+                OnPropertyChanged(nameof(Country));
             }
         }
 
-        private int _TeamId;
-        public int TeamId
+        private int? _teamId;
+        public int? TeamId
         {
-            get { return _TeamId; }
+            get { return _teamId; }
             set
             {
-                _TeamId = value;
-                OnPropertyChanged("TeamId");
+                _teamId = value;
+                OnPropertyChanged(nameof(TeamId));
             }
         }
 
         #endregion
+
+        private void Search()
+        {
+            var context = _tableviewModel.Context as RiderRepository;
+            if (context == null) return;
+            if (Id != null) context.ById(Id.Value);
+            if (!string.IsNullOrWhiteSpace(FirstName)) context.ByFirstName(FirstName);
+            if (!string.IsNullOrWhiteSpace(LastName)) context.ByLastName(LastName);
+            if (BirthDate != null) context.ByBirthDate(BirthDate.Value);
+            if (!string.IsNullOrWhiteSpace(Country)) context.ByCountry(Country);
+            if (TeamId != null) context.ByTeamId(TeamId.Value);
+            var query = context.GetRecords();
+            _tableviewModel.Collection = query;
+        }
+
+        private bool CanSearch()
+        {
+            return Id == null || string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName) ||
+                   BirthDate == null || string.IsNullOrWhiteSpace(Country);
+        }
+
+        #region IDataErrorInfo
+
+        public string this[string columnName]
+        {
+            get
+            {
+                var error = string.Empty;
+                switch (columnName)
+                {
+                    case nameof(FirstName):
+                        error = string.IsNullOrWhiteSpace(FirstName) ? "First Name can't be null!" : string.Empty;
+                        break;
+
+                    case nameof(LastName):
+                        error = string.IsNullOrWhiteSpace(LastName) ? "Last Name can't be null!" : string.Empty;
+                        break;
+
+                    case nameof(Country):
+                        error = string.IsNullOrWhiteSpace(Country) ? "Country can't be null!" : string.Empty;
+                        break;
+                }
+                return error;
+            }
+        }
+
+        public string Error { get; }
+
+        #endregion
+
     }
 }

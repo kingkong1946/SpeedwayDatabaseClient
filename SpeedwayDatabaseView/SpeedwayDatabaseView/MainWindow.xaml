@@ -11,10 +11,8 @@
         xmlns:viewModels="clr-namespace:SpeedwayDatabaseViewModel.ViewModels;assembly=SpeedwayDatabaseViewModel"
         xmlns:converters="clr-namespace:SpeedwayDatabaseViewModel.Converters;assembly=SpeedwayDatabaseViewModel"
         mc:Ignorable="d"
+        DataContext="{StaticResource TableViewModel}"
         Title="MainWindow" Height="350" Width="500">
-    <Window.DataContext>
-        <viewModels:TableViewModel/>
-    </Window.DataContext>
     <Window.Resources>
         <converters:DateBirthConverter x:Key="DateBirthConverter"/>
     </Window.Resources>
