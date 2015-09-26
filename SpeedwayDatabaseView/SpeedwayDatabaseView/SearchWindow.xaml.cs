@@ -28,5 +28,13 @@ namespace SpeedwayDatabaseView
         {
             Close();
         }
+
+        private void Enter_OnClick(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Close(); 
+            }
+        }
     }
 }
