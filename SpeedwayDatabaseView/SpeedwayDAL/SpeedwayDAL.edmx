@@ -194,7 +194,7 @@
           <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Scores" Relationship="Self.FK_RiderScore" FromRole="Riders" ToRole="Scores" />
-          <Property Name="TeamId" Type="Int32" />
+          <Property Name="Team_Id" Type="Int32" />
           <NavigationProperty Name="Team" Relationship="masterModel.FK_RiderTeam" FromRole="Rider" ToRole="Team" />
         </EntityType>
         <EntityType Name="Score">
@@ -296,7 +296,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Rider">
-              <PropertyRef Name="TeamId" />
+              <PropertyRef Name="Team_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -326,7 +326,7 @@
           <EntitySetMapping Name="Riders">
             <EntityTypeMapping TypeName="masterModel.Rider">
               <MappingFragment StoreEntitySet="Riders">
-                <ScalarProperty Name="TeamId" ColumnName="Team_Id" />
+                <ScalarProperty Name="Team_Id" ColumnName="Team_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />

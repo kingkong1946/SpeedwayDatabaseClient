@@ -12,7 +12,7 @@ using SpeedwayDAL;
 
 namespace SpeedwayDatabaseModel
 {
-    public class RiderRepository : BaseRepository, IRepository<Rider>
+    public class RiderRepository : BaseRepository<Rider>
     {
         private readonly DbSet<Rider> _riders;
 
@@ -21,73 +21,79 @@ namespace SpeedwayDatabaseModel
             _riders = Context.Riders;
         }
 
-        public RiderRepository ById(int id, bool flag)
+        public RiderRepository ById(int id)
         {
-            if (!flag) return this;
             AddAndOperator();
             Query.Append(" id = @id");
             Params.Add(new SqlParameter("@id", id));
             return this;
         }
 
-        public RiderRepository ByFirstName(string firstName, bool flag)
+        public RiderRepository ByFirstName(string firstName)
         {
-            if (!flag) return this;
             AddAndOperator();
             Query.Append(" firstName = @firstName");
             Params.Add(new SqlParameter("@firstName", firstName));
             return this;
         }
 
-        public RiderRepository ByLastName(string lastName, bool flag)
+        public RiderRepository ByLastName(string lastName)
         {
-            if (!flag) return this;
             AddAndOperator();
             Query.Append(" lastName = @lastName");
             Params.Add(new SqlParameter("@lastName", lastName));
             return this;
         }
 
-        public RiderRepository ByCountry(string country, bool flag)
+        public RiderRepository ByCountry(string country)
         {
-            if (!flag) return this;
             AddAndOperator();
             Query.Append(" country = @country");
             Params.Add(new SqlParameter("@country", country));
             return this;
         }
 
-        public RiderRepository ByBirthDate(DateTime birthDate, bool flag)
+        public RiderRepository ByBirthDate(DateTime birthDate)
         {
-            if (!flag) return this;
             AddAndOperator();
             Query.Append(" birthDate = @birthDate");
             Params.Add(new SqlParameter("@birthDate", birthDate.ToShortDateString()));
             return this;
         }
 
-        public RiderRepository ByTeamId(int? teamId, bool flag)
+        public RiderRepository ByTeamId(int? team_Id)
         {
-            if (!flag) return this;
             AddAndOperator();
-            Query.Append(" teamId = @teamId");
-            Params.Add(new SqlParameter("@teamId", teamId));
+            Query.Append(" team_Id = @team_Id");
+            Params.Add(new SqlParameter("@team_Id", team_Id));
             return this;
         }
 
-        public IEnumerable<Rider> GetRecords()
+        public override IEnumerable<Rider> GetRecords()
         {
             var query = $"SELECT * FROM riders{Query};";
-            var anwser = _riders.SqlQuery(query, Params.Count == 0 ? null : Params).ToList();
+            var parameters = Params.Count == 0 ? null : Params.ToArray();
+            var anwser = parameters == null ? _riders.SqlQuery(query).ToList() : _riders.SqlQuery(query, parameters).ToList();
             Query.Clear();
             Params.Clear();
             return anwser;
         }
 
-        public ObservableCollection<Rider> GetLocal()
+        public override void Save(IEnumerable<Rider>[] table)
         {
-            _riders.Load();
-            return _riders.Local;
+            foreach (var result in table[0].Select(rider => Context.Entry(rider)))
+            {
+                result.State = EntityState.Added;
+            }
+            foreach (var result in table[1].Select(rider => Context.Entry(rider)))
+            {
+                result.State = EntityState.Deleted;
+            }
+            foreach (var result in table[2].Select(rider => Context.Entry(rider)))
+            {
+                result.State = EntityState.Modified;
+            }
+            base.Save(table);
         }
     }
 }

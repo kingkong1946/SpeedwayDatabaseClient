@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using SpeedwayDatabaseModel;
@@ -11,7 +12,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
     /// <summary>
     /// 
     /// </summary>
-    public class TableViewModel : BaseViewModel 
+    public class TableViewModel : BaseViewModel
     {
         #region Constructors
 
@@ -23,11 +24,15 @@ namespace SpeedwayDatabaseViewModel.ViewModels
             LoadCommand = new RelayCommand(o => Load());
             AddCommand = new RelayCommand(o => Add());
             DeleteCommand = new RelayCommand(o => Delete(), IsSelected);
-            SearchCommand = new RelayCommand(o => Search());
+            //SearchCommand = new RelayCommand(o => Search());
             OnClosingCommand = new RelayCommand(o => OnClosing());
             SaveCommand = new RelayCommand(o => Save());
-
-            CreateContext();
+            EditedCommand = new RelayCommand(o => Edited());
+            _modified = new List<object>[3];
+            for (int i = 0; i < _modified.Count(); i++)
+            {
+                _modified[i] = new List<object>();
+            }
         }
 
         #endregion
@@ -80,8 +85,8 @@ namespace SpeedwayDatabaseViewModel.ViewModels
         private object _collection;
 
         private string _currentRepository = "riders";
-
         private dynamic _context;
+        private readonly List<object>[] _modified;
 
         #endregion
 
@@ -105,7 +110,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
         /// <summary>
         /// Occurs when user click search button
         /// </summary>
-        public ICommand SearchCommand { get; }
+        ///public ICommand SearchCommand { get; }
 
         /// <summary>
         /// Occurs when app is closing
@@ -116,23 +121,36 @@ namespace SpeedwayDatabaseViewModel.ViewModels
         /// Occurs when user click save button
         /// </summary>
         public ICommand SaveCommand { get; }
+
+        /// <summary>
+        /// Occurs when user edited cells
+        /// </summary>
+        public ICommand EditedCommand { get; }
         #endregion
 
         #region Private Methods
 
         private void Save()
         {
-            _context?.Save();
+            var list = CastModifiedList();
+            CreateContext();
+            try
+            {
+                _context?.Save(list);
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Can't save table";
+            }
+            finally
+            {
+                _context?.Dispose();
+            }
         }
 
         private void OnClosing()
         {
             _context?.Dispose();
-        }
-
-        private void Search()
-        {
-            //TODO Implement
         }
 
         private bool IsSelected(object parameter)
@@ -142,13 +160,18 @@ namespace SpeedwayDatabaseViewModel.ViewModels
 
         private void Load()
         {
+            CreateContext();
             try
             {
-                Collection = _context.GetLocal();
+                Collection = _context.GetRecords();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ErrorMessage = e.Message;
+                ErrorMessage = "Can't load table";
+            }
+            finally
+            {
+                _context?.Dispose();
             }
         }
 
@@ -157,6 +180,7 @@ namespace SpeedwayDatabaseViewModel.ViewModels
             dynamic item = CreateRecord();
             dynamic table = Collection;
             table.Add(item);
+            _modified[0].Add(item);
         }
 
         private void Delete()
@@ -164,6 +188,21 @@ namespace SpeedwayDatabaseViewModel.ViewModels
             dynamic item = SelectedItem;
             dynamic table = Collection;
             table.Remove(item);
+            _modified[1].Add(item);
+        }
+
+        private void Edited()
+        {
+            if (IfExist(SelectedItem)) return;
+            dynamic item = SelectedItem;
+            _modified[2].Add(item);
+        }
+
+        private bool IfExist(object item)
+        {
+            return _modified[0].Find(rider => rider == item) != null ||
+                   _modified[1].Find(rider => rider == item) != null ||
+                   _modified[2].Find(rider => rider == item) != null;
         }
 
         private void CreateContext()
@@ -194,6 +233,26 @@ namespace SpeedwayDatabaseViewModel.ViewModels
                     break;
             }
             return record;
+        }
+
+        private dynamic CastModifiedList()
+        {
+            dynamic list = null;
+            switch (_currentRepository.ToLower())
+            {
+                case "riders":
+                    list = new List<Rider>[3];
+                    for (int i = 0; i < _modified.Count(); i++)
+                    {
+                        list[i] = _modified[i].Select(o => (Rider)o).ToList();
+                    }
+                    break;
+
+                default:
+                    ErrorMessage = "Invalid type.";
+                    break;
+            }
+            return list;
         }
 
         #endregion
