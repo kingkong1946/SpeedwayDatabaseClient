@@ -99,16 +99,23 @@ namespace SpeedwayDatabaseViewModel.ViewModels
 
         private void Search()
         {
-            var context = _tableviewModel.Context as RiderRepository;
-            if (context == null) return;
-            if (Id != null) context.ById(Id.Value);
-            if (!string.IsNullOrWhiteSpace(FirstName)) context.ByFirstName(FirstName);
-            if (!string.IsNullOrWhiteSpace(LastName)) context.ByLastName(LastName);
-            if (BirthDate != null) context.ByBirthDate(BirthDate.Value);
-            if (!string.IsNullOrWhiteSpace(Country)) context.ByCountry(Country);
-            if (TeamId != null) context.ByTeamId(TeamId.Value);
-            var query = context.GetRecords();
-            _tableviewModel.Collection = query;
+            var context = _tableviewModel.CreateAndGetContext();
+            try
+            {
+                if (context == null) return;
+                if (Id != null) context.ById(Id.Value);
+                if (!string.IsNullOrWhiteSpace(FirstName)) context.ByFirstName(FirstName);
+                if (!string.IsNullOrWhiteSpace(LastName)) context.ByLastName(LastName);
+                if (BirthDate != null) context.ByBirthDate(BirthDate.Value);
+                if (!string.IsNullOrWhiteSpace(Country)) context.ByCountry(Country);
+                if (TeamId != null) context.ByTeamId(TeamId.Value);
+                var query = context.GetRecords();
+                _tableviewModel.Collection = query;
+            }
+            finally
+            {
+                context?.Dispose();
+            }
         }
 
         private bool CanSearch()

@@ -12,7 +12,7 @@ using SpeedwayDAL;
 
 namespace SpeedwayDatabaseModel
 {
-    public class RiderRepository : BaseRepository, IRepository<Rider>
+    public class RiderRepository : BaseRepository<Rider>
     {
         private readonly DbSet<Rider> _riders;
 
@@ -61,28 +61,39 @@ namespace SpeedwayDatabaseModel
             return this;
         }
 
-        public RiderRepository ByTeamId(int teamId)
+        public RiderRepository ByTeamId(int? team_Id)
         {
             AddAndOperator();
-            Query.Append(" teamId = @teamId");
-            Params.Add(new SqlParameter("@teamId", teamId));
+            Query.Append(" team_Id = @team_Id");
+            Params.Add(new SqlParameter("@team_Id", team_Id));
             return this;
         }
 
-        public IEnumerable<Rider> GetRecords()
+        public override IEnumerable<Rider> GetRecords()
         {
             var query = $"SELECT * FROM riders{Query};";
-            var parameters = Params.ToArray();
-            var anwser = _riders.SqlQuery(query, Params.Count == 0 ? null : parameters).ToList();
+            var parameters = Params.Count == 0 ? null : Params.ToArray();
+            var anwser = parameters == null ? _riders.SqlQuery(query).ToList() : _riders.SqlQuery(query, parameters).ToList();
             Query.Clear();
             Params.Clear();
             return anwser;
         }
 
-        public ObservableCollection<Rider> GetLocal()
+        public override void Save(IEnumerable<Rider>[] table)
         {
-            _riders.Load();
-            return _riders.Local;
+            foreach (var result in table[0].Select(rider => Context.Entry(rider)))
+            {
+                result.State = EntityState.Added;
+            }
+            foreach (var result in table[1].Select(rider => Context.Entry(rider)))
+            {
+                result.State = EntityState.Deleted;
+            }
+            foreach (var result in table[2].Select(rider => Context.Entry(rider)))
+            {
+                result.State = EntityState.Modified;
+            }
+            base.Save(table);
         }
     }
 }

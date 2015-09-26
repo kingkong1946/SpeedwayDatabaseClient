@@ -90,6 +90,9 @@
                         <i:EventTrigger EventName="OnClosing">
                             <i:InvokeCommandAction Command="{Binding OnClosingCommand}"/>
                         </i:EventTrigger>
+                        <i:EventTrigger EventName="CellEditEnding">
+                            <i:InvokeCommandAction Command="{Binding EditedCommand}"/>
+                        </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </DataGrid>
             </TabItem>
